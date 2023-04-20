@@ -16,7 +16,7 @@ import {
     TemporalAAPlugin,
     AnisotropyPlugin,
     GammaCorrectionPlugin,
-    mobileAndTabletCheck,
+
     addBasePlugins,
     ITexture, TweakpaneUiPlugin, AssetManagerBasicPopupPlugin, CanvasSnipperPlugin,
 
@@ -39,7 +39,8 @@ async function setupViewer(){
 
     // Initialize the viewer
     const viewer = new ViewerApp({
-        canvas: document.getElementById('webgi-canvas') as HTMLCanvasElement
+        canvas: document.getElementById('webgi-canvas') as HTMLCanvasElement,
+        useRgbm: false,
     })
 
     // Add some plugins
@@ -69,26 +70,23 @@ async function setupViewer(){
     // or use this to add all main ones at once.
     await addBasePlugins(viewer)
 
-    const isMobile = mobileAndTabletCheck()
     // Loader
     const importer = manager.importer as AssetImporter
 
     importer.addEventListener('onProgress', (evt) => {
         const progressRatio = (evt.loaded / evt.total)
+        console.log(progressRatio)
+        // document.querySelector('.progress-bar1')?.setAttribute('style', `transform: scaleX(${ progressRatio })`)
+        // document.querySelector('.progress-bar2')?.setAttribute('style', `transform: scaleX(${ progressRatio })`)
         gsap.to('.progress-bar1', { duration: 1, scaleX: progressRatio, transformOrigin: '0% 50%' })
         gsap.to('.progress-bar2', { duration: 1, scaleX: progressRatio, transformOrigin: '0% 50%' })
-        setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-        }, 300)
     })
 
     importer.addEventListener('onLoad', (evt) => {
-        gsap.to('.loader', { delay: 3, duration: 1, autoAlpha: 0 })
+        gsap.to('.loader', { delay: 1, duration: 1, autoAlpha: 0 })
+        gsap.to(window, { duration: 0.05, scrollTo: { y: 0, autoKill: false } });
+        
     })
-
-    // window.addEventListener('resize', () => {;
-    //     // console.log(isMobile)
-    // })
 
     // Add more plugins not available in base, like CanvasSnipperPlugin which has helpers to download an image of the canvas.
     await viewer.addPlugin(CanvasSnipperPlugin)
@@ -96,8 +94,7 @@ async function setupViewer(){
     // This must be called once after all plugins are added.
     viewer.renderer.refreshPipeline()
 
-    // const cacheBuster = Math.floor(Math.random() * 1000000)
-    await manager.addFromPath('./assets/ghost.glb')
+    await manager.addFromPath("./assets/ghost2.glb")
 
     // Load an environment map if not set in the glb file
     // await viewer.scene.setEnvironment(
@@ -107,15 +104,12 @@ async function setupViewer(){
     // );
 
     // Add some UI for tweak and testing.
-    // const uiPlugin = await viewer.addPlugin(TweakpaneUiPlugin)
+    const uiPlugin = await viewer.addPlugin(TweakpaneUiPlugin)
     // Add plugins to the UI to see their settings.
-    // uiPlugin.setupPlugins<IViewerPlugin>(TonemapPlugin, CanvasSnipperPlugin)
+    uiPlugin.setupPlugins<IViewerPlugin>(TonemapPlugin, CanvasSnipperPlugin)
 
     // camera.setCameraOptions({ fov: 50 })
-    if (isMobile) {
-        camera.setCameraOptions({ fov: 45 })
-    }
-    console.log(camera.setCameraOptions)
+
     function initScrollAnimation() {
         const section1 = document.querySelector('#section1') as HTMLElement
         const section2 = document.querySelector('#section2') as HTMLElement
@@ -130,18 +124,17 @@ async function setupViewer(){
             smoothTouch: true,
         })
 
-        const ghostTL = gsap.timeline({ onUpdate: onUpdate })
-        const ghostTL2 = gsap.timeline({ onUpdate: onUpdate })
-        const ghostTL3 = gsap.timeline({ onUpdate: onUpdate })
-        const ghostTL4 = gsap.timeline({ onUpdate: onUpdate })
-        const ghostTL5 = gsap.timeline({ onUpdate: onUpdate })
-
+        const ghostTL = gsap.timeline({ onComplte: () => { console.log('on complete scene1') }})
+        const ghostTL2 = gsap.timeline()
+        const ghostTL3 = gsap.timeline()
+        const ghostTL4 = gsap.timeline()
+        const ghostTL5 = gsap.timeline()
         const anim1TL = gsap.timeline()
         const anim2TL = gsap.timeline()
         const anim3TL = gsap.timeline()
         const anim4TL = gsap.timeline()
         const anim5TL = gsap.timeline()
-        ScrollTrigger.refresh()
+         const ghostAnimDur = 2
 
         const ufoTL = gsap.timeline({ repeat: -1, yoyo: true })
         ufoTL
@@ -155,12 +148,25 @@ async function setupViewer(){
         // SCENE 1 CAMERA
         ghostTL
         .add('camera1')
-        .to(position, { x: 2.97, y: -1.74, z: 2.91 }, 'camera1')
-        .to(target, { x: -0.40, y: -0.010, z: 1.02 }, 'camera1')
+        .to(position, { duration: ghostAnimDur, x: 2.9362635967, y: -1.6968395839, z: 2.8401969836, onUpdate: webgiUpdate }, 'camera1')
+        .to(target, { duration: ghostAnimDur, x: -0.2560148524, y: -0.0741596506, z: 1.0919463476 }, 'camera1')
         const ghostST = ScrollTrigger.create({
             animation: ghostTL,
             trigger: '#section2',
-            start: 'top 98%',
+            start: 'top bottom',
+            end: 'top top',
+            scrub: true,
+            immediateRender: false,
+        })
+        // SCENE 1 ANIMATION
+        anim1TL
+        .add('anim1')
+        .to('.section1-copy', { duration: 1, yPercent: -100, opacity: 0 }, 'anim1')
+        .from('.section2-copy', { duration: 1, yPercent: 100, opacity: 0 }, 'anim1')
+        ScrollTrigger.create({
+            animation: anim1TL,
+            trigger: '#section2',
+            start: 'top bottom',
             end: 'top top',
             scrub: true,
             immediateRender: false
@@ -168,25 +174,52 @@ async function setupViewer(){
         // SCENE 2 CAMERA
         ghostTL2
         .add('camera2')
-        .to(position, { x: -4.58, y: -2.72, z: 9.74 }, 'camera2')
-        .to(target, { x: 1.61, y: -0.95, z: 2.06 }, 'camera2')
+        .to(position, { duration: ghostAnimDur, x: -5.131316672, y: 0.1176477196, z: 10.7760203025, onUpdate: webgiUpdate }, 'camera2')
+        .to(target, { duration: ghostAnimDur, x: 2.6888452326, y: -1.0306176781, z: 1.8387450979 }, 'camera2')
         const ghostST2 = ScrollTrigger.create({
             animation: ghostTL2,
             trigger: '#section3',
-            start: 'top 98%',
+            start: 'top bottom',
             end: 'top top',
             scrub: true,
             immediateRender: false
         })
+        // SCENE 2 ANIMATION
+        anim2TL
+        .add('anim2')
+        .to('.section2-copy', { duration: 1, yPercent: -100, opacity: 0 }, 'anim2')
+        .from('.section3-copy', { duration: 1, yPercent: 100, opacity: 0 }, 'anim2')
+        ScrollTrigger.create({
+            animation: anim2TL,
+            trigger: '#section3',
+            start: 'top bottom',
+            end: 'top top',
+            scrub: true,
+            immediateRender: false
+        })
+
         // SCENE 3 CAMERA
         ghostTL3
         .add('camera3')
-        .to(position, { x: -0.42, y: -4.37, z: 4.07 }, 'camera3')
-        .to(target, { x: 0.69, y: -0.61, z: 2.07 }, 'camera3')
+        .to(position, { duration: ghostAnimDur, x: -0.3948204204, y: -4.3682218572, z: 4.323688804, onUpdate: webgiUpdate }, 'camera3')
+        .to(target, { duration: ghostAnimDur, x: 1.34638915, y: 1.3368042845, z: 1.0247688353 }, 'camera3')
         const ghostST3 = ScrollTrigger.create({
             animation: ghostTL3,
             trigger: '#section4',
-            start: 'top 98%',
+            start: 'top bottom',
+            end: 'top top',
+            scrub: true,
+            immediateRender: false
+        })
+        // SCENE 3 ANIMATION
+        anim3TL
+        .add('anim3')
+        .to('.section3-copy', { duration: 1, yPercent: -100, opacity: 0 }, 'anim3')
+        .from('.section4-copy', { duration: 1, yPercent: 100, opacity: 0 }, 'anim3')
+        ScrollTrigger.create({
+            animation: anim3TL,
+            trigger: '#section4',
+            start: 'top bottom',
             end: 'top top',
             scrub: true,
             immediateRender: false
@@ -194,110 +227,97 @@ async function setupViewer(){
         // SCENE 4 CAMERA
         ghostTL4
         .add('camera4')
-        .to(position, { x: -0.72, y: 0.70, z: 6.74 }, 'camera4')
-        .to(target, { x: -0.03, y: 0.02, z: 0.74 }, 'camera4')
+        .to(position, { duration: ghostAnimDur, x: -0.5922336001, y: 0.4404157014, z: 6.6953893315, onUpdate: webgiUpdate }, 'camera4')
+        .to(target, { duration: ghostAnimDur, x: 0.0720317825, y: -0.0315525397, z: -0.3388108623 }, 'camera4')
+
         const ghostST4 = ScrollTrigger.create({
             animation: ghostTL4,
             trigger: '#section5',
-            start: 'top 98%',
-            end: 'top top',
-            scrub: true,
-            immediateRender: false
-        })
-        ghostTL5
-        .add('camera5')
-        .to(position, { x: 4.16, y: -0.62, z: -15.26 }, 'camera5')
-        .to(target, { x: -0.24, y: -0.23, z: 0.56 }, 'camera5')
-        const ghostST5 = ScrollTrigger.create({
-            animation: ghostTL5,
-            trigger: '#section6',
-            start: 'top 98%',
-            end: 'top top',
-            scrub: true,
-            immediateRender: false
-        })
-        
-        // SCENE 1 ANIMATION
-        anim1TL
-        .set('.section2-copy', { yPercent: 100, opacity: 0 })
-        .add('scene1')
-        .to('.section1-copy', { opacity: 0 }, 'scene1')
-        .to('.section2-copy', { yPercent: 0, opacity: 1 }, 'scene1+=1')
-        ScrollTrigger.create({
-            animation: anim1TL,
-            trigger: '#section2',
-            start: 'top 98%',
-            end: 'top top',
-            scrub: true,
-            immediateRender: false
-        })
-        // SCENE 2 ANIMATION
-        anim2TL
-        .set(['.skull-candy','.skull-copy'], { yPercent: 100, opacity: 0 })
-        .add('scene2')
-        .to('.section2-copy', { opacity: 0 }, 'scene2')
-        .to('.skull-candy', { yPercent: 0, opacity: 1 }, 'scene2+=0.5')
-        .to('.skull-copy', { yPercent: 0, opacity: 1 }, 'scene2+=0.9')
-        ScrollTrigger.create({
-            animation: anim2TL,
-            trigger: '#section3',
-            start: 'top 98%',
-            end: 'top top',
-            scrub: true,
-            immediateRender: false
-        })
-        // SCENE 3 ANIMATION
-        anim3TL
-        .set(['.space-cane','.cane-copy'], { yPercent: 100, opacity: 0 })
-        .add('scene3')
-        .to(['.skull-candy','.skull-copy'], { opacity: 0 }, 'scene3')
-        .to('.space-cane', { yPercent: 0, opacity: 1 }, 'scene3+=0.5')
-        .to('.cane-copy', { yPercent: 0, opacity: 1 }, 'scene3+=0.9')
-        ScrollTrigger.create({
-            animation: anim3TL,
-            trigger: '#section4',
-            start: 'top 98%',
+            start: 'top bottom',
             end: 'top top',
             scrub: true,
             immediateRender: false
         })
         // SCENE 4 ANIMATION
         anim4TL
-        .set('.section5-copy', { yPercent: 100, opacity: 0 })
-        .add('scene4')
-        .to(['.space-cane','.cane-copy'], { opacity: 0 }, 'scene4')
-        .to('.section5-copy', { yPercent: 0, opacity: 1 }, 'scene4')
+        .add('anim4')
+        .to('.section4-copy', { duration: 1, yPercent: -100, opacity: 0 }, 'anim4')
+        .from('.section5-copy', { duration: 1, yPercent: 100, opacity: 0 }, 'anim4')
         ScrollTrigger.create({
             animation: anim4TL,
             trigger: '#section5',
-            start: 'top 98%',
+            start: 'top bottom',
             end: 'top top',
             scrub: true,
             immediateRender: false
         })
-        // SCENE 5 ANIMATION
+        // SCENE 5 CAMERA
+        ghostTL5
+        .add('camera5')
+        .to(position, { duration: ghostAnimDur, x: 3.863481129, y: 1.8987295479, z: -15.5522610782, onUpdate: webgiUpdate }, 'camera5')
+        .to(target, { duration: ghostAnimDur, x: -0.0204389583, y: -0.149269659, z: -0.346106153 }, 'camera5')
+
+        const ghostST5 = ScrollTrigger.create({
+            animation: ghostTL5,
+            trigger: '#section6',
+            start: 'top bottom',
+            end: 'top top',
+            scrub: true,
+            immediateRender: false
+        })
+        // SCENE 4 ANIMATION
         anim5TL
-        .set(['.section6-copy','.section6-copy2'], { opacity: 0 })
-        .add('scene5')
-        .to('.section5-copy', { opacity: 0 }, 'scene5')
-        .to(['.section6-copy','.section6-copy2'], { opacity: 1 }, 'scene5+=2')
+        .add('anim5')
+        .to('.section5-copy', { duration: 1, yPercent: -100, opacity: 0 }, 'anim5')
+        .from('.section6-copy', { duration: 1, yPercent: 100, opacity: 0 }, 'anim5')
         ScrollTrigger.create({
             animation: anim5TL,
             trigger: '#section6',
-            start: 'top 98%',
+            start: 'top bottom',
             end: 'top top',
             scrub: true,
             immediateRender: false
         })
+        
+        // PARALLAX CODE
+        // let getRatio = el => window.innerHeight / (window.innerHeight + el.offsetHeight);
+
+        // const sections = document.querySelectorAll('.section');
+        // sections.forEach((section, i) => {
+        //     const sectionBG = section.querySelector(".bg") as HTMLElement
+
+        //     // Give the backgrounds some random images
+        //     // sectionBG.style.backgroundImage = `url(https://picsum.photos/1600/800?random=${i})`;
+        
+        //     // the first image (i === 0) should be handled differently because it should start at the very top.
+        //     // use function-based values in order to keep things responsive
+        //     gsap.fromTo(sectionBG,
+        //     { 
+        //         backgroundPosition: () => i ? `50% ${-window.innerHeight * getRatio(section)}px` : "50% 0px"
+        //     },
+        //     { 
+        //         backgroundPosition: () => `50% ${window.innerHeight * (1 - getRatio(section))}px`,
+        //         ease: "none",
+        //         scrollTrigger: {
+        //             trigger: section,
+        //             start: () => i ? "top bottom" : "top top", 
+        //             end: "bottom top",
+        //             scrub: true,
+        //             markers: true,
+        //             invalidateOnRefresh: true // to make it responsive
+        //         }
+        //     })
+        // })
     }
+
     initScrollAnimation()
 
     // WEBGI UPDATE
     let needsUpdate = true
 
-    function onUpdate() {
+    function webgiUpdate() {
         needsUpdate = true
-        // viewer.renderer.resetShadows()
+        viewer.renderer.resetShadows()
         // viewer.setDirty()
     }
 
@@ -308,75 +328,6 @@ async function setupViewer(){
             needsUpdate = false
         }
     })
-    
-    interface Star {
-        x: number;
-        y: number;
-        radius: number;
-        alpha: number;
-        decreasing: boolean;
-        dRatio: number;
-    }
-      
-    const canvas = document.getElementById('stars') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    
-    // Set canvas dimensions
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    // Create an array to store stars
-    const stars: Star[] = [];
-    const numStars = 100;
-    
-    // Generate stars and add them to the array
-    for (let i = 0; i < numStars; i++) {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        const radius = Math.random() * 2;
-        
-        stars.push({
-            x: x,
-            y: y,
-            radius: radius,
-            alpha: 1,
-            decreasing: true,
-            dRatio: Math.random() * 0.05,
-        });
-    }
-    
-    // Animate stars
-    function animate() {
-        requestAnimationFrame(animate);
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-        // Draw stars
-        for (let i = 0; i < numStars; i++) {
-            const star = stars[i];
-        
-            ctx.beginPath();
-            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
-            ctx.fill();
-        
-            // Update star alpha
-            if (star.decreasing) {
-            star.alpha -= star.dRatio;
-            if (star.alpha < 0.1) {
-                star.decreasing = false;
-            }
-            } else {
-            star.alpha += star.dRatio;
-                if (star.alpha > 0.95) {
-                    star.decreasing = true;
-                }
-            }
-        }
-    }
-    
-    // Star animation
-    animate();
 }
 
 setupViewer()

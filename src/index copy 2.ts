@@ -16,7 +16,7 @@ import {
     TemporalAAPlugin,
     AnisotropyPlugin,
     GammaCorrectionPlugin,
-    mobileAndTabletCheck,
+
     addBasePlugins,
     ITexture, TweakpaneUiPlugin, AssetManagerBasicPopupPlugin, CanvasSnipperPlugin,
 
@@ -69,7 +69,6 @@ async function setupViewer(){
     // or use this to add all main ones at once.
     await addBasePlugins(viewer)
 
-    const isMobile = mobileAndTabletCheck()
     // Loader
     const importer = manager.importer as AssetImporter
 
@@ -86,18 +85,14 @@ async function setupViewer(){
         gsap.to('.loader', { delay: 3, duration: 1, autoAlpha: 0 })
     })
 
-    // window.addEventListener('resize', () => {;
-    //     // console.log(isMobile)
-    // })
-
     // Add more plugins not available in base, like CanvasSnipperPlugin which has helpers to download an image of the canvas.
     await viewer.addPlugin(CanvasSnipperPlugin)
 
     // This must be called once after all plugins are added.
     viewer.renderer.refreshPipeline()
 
-    // const cacheBuster = Math.floor(Math.random() * 1000000)
-    await manager.addFromPath('./assets/ghost.glb')
+    const cacheBuster = Math.floor(Math.random() * 1000000)
+    await manager.addFromPath(`./assets/ghost.glb?cache=${ cacheBuster }`)
 
     // Load an environment map if not set in the glb file
     // await viewer.scene.setEnvironment(
@@ -112,10 +107,7 @@ async function setupViewer(){
     // uiPlugin.setupPlugins<IViewerPlugin>(TonemapPlugin, CanvasSnipperPlugin)
 
     // camera.setCameraOptions({ fov: 50 })
-    if (isMobile) {
-        camera.setCameraOptions({ fov: 45 })
-    }
-    console.log(camera.setCameraOptions)
+
     function initScrollAnimation() {
         const section1 = document.querySelector('#section1') as HTMLElement
         const section2 = document.querySelector('#section2') as HTMLElement
@@ -130,11 +122,65 @@ async function setupViewer(){
             smoothTouch: true,
         })
 
-        const ghostTL = gsap.timeline({ onUpdate: onUpdate })
-        const ghostTL2 = gsap.timeline({ onUpdate: onUpdate })
-        const ghostTL3 = gsap.timeline({ onUpdate: onUpdate })
-        const ghostTL4 = gsap.timeline({ onUpdate: onUpdate })
-        const ghostTL5 = gsap.timeline({ onUpdate: onUpdate })
+        const ghostTL = gsap.timeline(
+            { 
+                onUpdate: onUpdate,
+                // scrollTrigger: {
+                //     trigger: '#section2',
+                //     start: 'top 98%',
+                //     end: 'top top',
+                //     scrub: true,
+                //     immediateRender: false
+                // }
+            })
+        const ghostTL2 = gsap.timeline(
+            { 
+                onUpdate: onUpdate,
+                // scrollTrigger: {
+                //     trigger: '#section3',
+                //     start: 'top 98%',
+                //     end: 'top top',
+                //     scrub: true,
+                //     immediateRender: false
+                // }
+            })
+        const ghostTL3 = gsap.timeline(
+            { 
+                onUpdate: onUpdate,
+                // scrollTrigger: {
+                //     trigger: '#section4',
+                //     start: 'top 98%',
+                //     end: 'top top',
+                //     scrub: true,
+                //     immediateRender: false
+                // }
+            })
+        const ghostTL4 = gsap.timeline(
+            { 
+                onUpdate: onUpdate,
+                // scrollTrigger: {
+                //     trigger: '#section5',
+                //     start: 'top 98%',
+                //     end: 'top top',
+                //     scrub: true,
+                //     immediateRender: false
+                // }
+            })
+        const ghostTL5 = gsap.timeline(
+            { 
+                onUpdate: onUpdate,
+                // scrollTrigger: {
+                //     trigger: '#section6',
+                //     start: 'top 98%',
+                //     end: 'top top',
+                //     scrub: true,
+                //     immediateRender: false
+                // }
+            })
+        // const ghostTL2 = gsap.timeline({ onUpdate: onUpdate })
+        // const ghostTL3 = gsap.timeline({ onUpdate: onUpdate })
+        // const ghostTL4 = gsap.timeline({ onUpdate: onUpdate })
+        // const ghostTL5 = gsap.timeline({ onUpdate: onUpdate })
 
         const anim1TL = gsap.timeline()
         const anim2TL = gsap.timeline()
@@ -153,6 +199,7 @@ async function setupViewer(){
         .to('.ufo', { duration: 1, rotation: 10, ease: 'sine.inOut' },'ufoAnim2')
         
         // SCENE 1 CAMERA
+
         ghostTL
         .add('camera1')
         .to(position, { x: 2.97, y: -1.74, z: 2.91 }, 'camera1')
@@ -277,10 +324,10 @@ async function setupViewer(){
         })
         // SCENE 5 ANIMATION
         anim5TL
-        .set(['.section6-copy','.section6-copy2'], { opacity: 0 })
+        .set('.section6-copy', { yPercent: 100, opacity: 0 })
         .add('scene5')
         .to('.section5-copy', { opacity: 0 }, 'scene5')
-        .to(['.section6-copy','.section6-copy2'], { opacity: 1 }, 'scene5+=2')
+        .to('.section6-copy', { yPercent: 0, opacity: 1 }, 'scene5+=0.4')
         ScrollTrigger.create({
             animation: anim5TL,
             trigger: '#section6',
@@ -290,6 +337,7 @@ async function setupViewer(){
             immediateRender: false
         })
     }
+
     initScrollAnimation()
 
     // WEBGI UPDATE

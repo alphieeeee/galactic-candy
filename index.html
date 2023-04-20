@@ -2,16 +2,114 @@
 <html lang="en">
 
 <head>
-	<title>WebGi starter</title>
+	<title>Ghost in Space</title>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="icon" type="image/x-icon" href="./assets/ufo.png">
 </head>
 
 <body>
+	<div class="background-container">
+		<canvas id="stars"></canvas>
+	</div>
 	<div id="webgi-canvas-container">
 		<canvas id="webgi-canvas"></canvas>
 	</div>
 
+	<div id="smooth-wrapper">
+    <div id="smooth-content">
+
+			<section id="section1" class="container-fluid section">
+				<div class="bg"></div>
+				<div class="row vh-100">
+					<div class="col-12 d-flex justify-content-center align-items-center">
+						<div class="section1-copy">
+							<div class="ufo">
+								<img src="./assets/ufo.png" />
+							</div>
+							<h1>Ghost in Space</h1>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section id="section2" class="container-fluid section">
+				<div class="bg"></div>
+				<div class="row vh-100">
+					<div class="col-12 d-flex justify-content-center justify-content-lg-start align-items-center">
+						<div class="section2-copy">
+							<h2>Peek a boo!</h2>
+							<p>Welcome to Ghost in Space! Our store offers delicious and colorful candies that will satisfy your sweet tooth. Whether you're looking for something fruity or sour we have something out of this world for you.</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section id="section3" class="container-fluid section">
+				<div class="bg"></div>
+				<div class="row vh-100">
+					<div class="col-12 col-lg-7 d-flex justify-content-center align-items-end justify-content-lg-end align-items-lg-center">
+						<div class="skull-candy">
+							<img src="./assets/skull-candy.png" />
+						</div>
+					</div>
+					<div class="col-12 col-lg-5 d-flex justify-content-center align-items-center">
+						<div class="skull-copy">
+							<h2>Space Skull</h2>
+							<p>Simply sour, simply good, simply galactic!</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section id="section4" class="container-fluid section">
+				<div class="bg"></div>
+				<div class="row vh-100">
+					<div class="col-12 col-lg-7 d-flex justify-content-center align-items-end justify-content-lg-end align-items-lg-center">
+						<div class="space-cane">
+							<img src="./assets/space-cane.png" />
+						</div>
+					</div>
+					<div class="col-12 col-lg-5 d-flex justify-content-center align-items-center">
+						<div class="cane-copy">
+							<h2>Space Cane</h2>
+							<p>Out of this world fruity candy that will make you high!</p>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section id="section5" class="container-fluid section">
+				<div class="bg"></div>
+				<div class="row vh-100">
+					<div class="col-12 d-flex justify-content-center align-items-center">
+						<div class="section5-copy">
+							<h2>Un-boo-lievably sweet!</h2>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section id="section6" class="container-fluid section">
+				<div class="bg"></div>
+				<div class="row vh-100">
+					<div class="col-12 d-flex justify-content-center align-items-center">
+						<div class="section6-copy">
+							<!-- <h2>What are you waiting for?</h2> -->
+							<h2>Boo yah! Time for candies!</h2>
+						</div>
+						<!-- <div class="section6-copy2">
+							<h2>Lets haunt for candies!</h2>
+						</div> -->
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<div class="loader">
+		<h1>Loading... <span>please wait!</span></h1>
+		<div class="progress-bar1 progress-bar"></div>
+		<div class="progress-bar2 progress-bar"></div>
+	</div>
 	<script src="src/index.ts" type="module"></script>
 </body>
 

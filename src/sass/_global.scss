@@ -1,0 +1,276 @@
+.d-hide {
+  display: none;
+}
+
+// * {
+// 	&:hover {
+// 		border: 0.5px solid red;
+// 		box-sizing: border-box;
+// 	}
+// }
+
+// FIXED BACKGROUND 
+.background-container {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  // display: none;
+}
+// WEBGI //
+#webgi-canvas-container{
+  pointer-events: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  // z-index: 1;
+}
+
+#webgi-canvas {
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  // opacity: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #abe2df;
+  line-height: 1;
+  text-shadow: 1px 1px 3px black;
+}
+
+h1 {
+  font-size: 12rem;
+  @media(max-width: 1399.98px) {
+    font-size: 10rem;
+  }
+  @media(max-width: 1199.98px) {
+    font-size: 8rem;
+  }
+  @media(max-width: 991.98px) {
+    font-size: 6rem;
+  }
+  @media(max-width: 767.98px) {
+    font-size: 5rem;
+  }
+  @media(max-width: 575.98px) {
+    font-size: 4rem;
+  }
+}
+
+h2 {
+  font-size: 8rem;
+  line-height: 0.8;
+  @media(max-width: 1399.98px) {
+    font-size: 7rem;
+  }
+  @media(max-width: 1199.98px) {
+    font-size: 6rem;
+  }
+  @media(max-width: 991.98px) {
+    font-size: 5rem;
+  }
+  @media(max-width: 767.98px) {
+    font-size: 4rem;
+  }
+  @media(max-width: 575.98px) {
+    font-size: 3rem;
+  }
+}
+
+p {
+  font-size: 2rem;
+  line-height: 1.2;
+  text-shadow: 1px 1px 3px black;
+  @media(max-width: 575.98px) {
+    font-size: 1.6rem;
+  }
+}
+
+section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  font-family: $bubble-font;
+  // z-index: 2;
+  .bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+#section1 {
+  .bg {
+    background: pink;
+  }
+  .ufo {
+    position: absolute;
+    left: 40%;
+    top: -25%;
+    width: 10%;
+  }
+}
+#section2 {
+  .bg {
+    background: blue;
+  }
+  .section2-copy {
+    max-width: 800px;
+    margin-left: 5vw;
+    @media(max-width: 1199.98px) {
+      max-width: 640px;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media(max-width: 991.98px) {
+      max-width: 575px;
+    }
+    @media(max-width: 767.98px) {
+      max-width: 375px;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+#section3 {
+  width: 100%;
+  height: 100%;
+  .bg {
+    background: green;
+  }
+  .skull-candy {
+    max-width: 351px;
+    width: 35%;
+  }
+  .skull-copy {
+    text-align: left;
+    @media(max-width: 991.98px) {
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 1rem;
+    }
+    p {
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      @media(max-width: 991.98px) {
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+#section4 {
+  .bg {
+    background: yellow;
+  }
+  .space-cane {
+    max-width: 376px;
+    width: 35%;
+  }
+  .cane-copy {
+    text-align: left;
+    @media(max-width: 991.98px) {
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 1rem;
+    }
+    p {
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      @media(max-width: 991.98px) {
+        max-width: 80%;
+      }
+    }
+  }
+}
+
+#section5 {
+  .bg {
+    background: pink;
+  }
+  .section5-copy {
+    text-align: center;
+    max-width: 90%;
+    @media(max-width: 991.98px) {
+      max-width: 80%;
+    }
+    @media(max-width: 767.98px) {
+      max-width: 100%;
+    }
+  }
+}
+
+#section6 {
+  .bg {
+    background: gray;
+  }
+  .section6-copy {
+    text-align: center;
+    max-width: 90%;
+    @media(max-width: 991.98px) {
+      max-width: 80%;
+    }
+    @media(max-width: 767.98px) {
+      max-width: 100%;
+    }
+  }
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  pointer-events: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 9;
+  h1 {
+    max-width: 80%;
+    font-family: $bubble-font;
+    font-size: 5rem;
+    text-align: center;
+    text-transform: capitalize;
+  }
+  .progress-bar {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 10px;
+  }
+  .progress-bar1 {
+    background: #f17abc;
+    top: 0;
+    transform: scaleX(0);
+  }
+  .progress-bar2 {
+    background: #de45e3;
+    bottom: 0;
+    transform: scaleX(0);
+  }
+}
+.bg {
+  background: none !important;
+}
+
+

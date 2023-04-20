@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'bubbleboddy';
+  src: url('../fonts/bubbleboddy-Fat.woff2') format('woff2'),
+      url('../fonts/bubbleboddy-Fat.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+$bubble-font: "bubbleboddy";
